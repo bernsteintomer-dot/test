@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Claude Buddy</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+    background: linear-gradient(90deg, #e2b96f, #f0d9a0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .buddy-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 20px 0;
+  }
+  .buddy {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(145deg, #d4a574, #c4956a);
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+  .buddy:active { transform: scale(0.95); }
+  .buddy.happy { animation: bounce 0.5s ease; }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .buddy { animation: float 3s ease-in-out infinite; }
+  .buddy.happy { animation: bounce 0.5s ease; }
+  .eye {
+    width: 24px;
+    height: 28px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 65px;
+  }
+  .eye::after {
+    content: '';
+    width: 12px;
+    height: 14px;
+    background: #2d2d2d;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 0.3s;
+  }
+  .eye.left { left: 60px; }
+  .eye.right { right: 60px; }
+  .mouth {
+    width: 40px;
+    height: 20px;
+    border-bottom: 4px solid #5a3e2b;
+    border-radius: 0 0 50% 50%;
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 0.3s;
+  }
+  .blush {
+    width: 25px;
+    height: 12px;
+    background: rgba(255, 130, 130, 0.4);
+    border-radius: 50%;
+    position: absolute;
+    top: 100px;
+  }
+  .blush.left { left: 35px; }
+  .blush.right { right: 35px; }
+  .speech-bubble {
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 14px 18px;
+    max-width: 300px;
+    text-align: center;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    min-height: 50px;
+    margin-bottom: 16px;
+    transition: all 0.3s;
+  }
+  .traits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin: 16px 0;
+    max-width: 340px;
+  }
+  .trait {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .stats {
+    width: 100%;
+    max-width: 320px;
+    margin: 12px 0;
+  }
+  .stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 8px 0;
+    font-size: 0.85rem;
+  }
+  .stat-bar {
+    width: 180px;
+    height: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .stat-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.5s ease;
+  }
+  .stat-fill.happiness { background: linear-gradient(90deg, #f7971e, #ffd200); }
+  .stat-fill.energy { background: linear-gradient(90deg, #56ab2f, #a8e063); }
+  .stat-fill.curiosity { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+  .stat-fill.sass { background: linear-gradient(90deg, #f953c6, #b91d73); }
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    max-width: 320px;
+    width: 100%;
+    margin-top: 12px;
+  }
+  .action-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    border-radius: 14px;
+    padding: 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .action-btn:active {
+    background: rgba(255,255,255,0.2);
+    transform: scale(0.96);
+  }
+  .name-tag {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    opacity: 0.9;
+  }
+  .particles {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    animation: drift 8s linear infinite;
+  }
+  @keyframes drift {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+  }
+  .content { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="content">
+  <h1>My Claude Buddy</h1>
+  <div class="name-tag" id="buddyName">Claude Jr.</div>
+
+  <div class="buddy-container">
+    <div class="buddy" id="buddy" onclick="petBuddy()">
+      <div class="eye left"></div>
+      <div class="eye right"></div>
+      <div class="blush left"></div>
+      <div class="blush right"></div>
+      <div class="mouth" id="mouth"></div>
+    </div>
+  </div>
+
+  <div class="speech-bubble" id="speech">Tap me! I'm your new buddy.</div>
+
+  <div class="traits" id="traits"></div>
+
+  <div class="stats">
+    <div class="stat-row">
+      <span>Happiness</span>
+      <div class="stat-bar"><div class="stat-fill happiness" id="happinessBar" style="width:70%"></div></div>
+    </div>
+    <div class="stat-row">
+      <span>Energy</span>
+      <div class="stat-bar"><div class="stat-fill energy" id="energyBar" style="width:85%"></div></div>
+    </div>
+    <div class="stat-row">
+      <span>Curiosity</span>
+      <div class="stat-bar"><div class="stat-fill curiosity" id="curiosityBar" style="width:60%"></div></div>
+    </div>
+    <div class="stat-row">
+      <span>Sass</span>
+      <div class="stat-bar"><div class="stat-fill sass" id="sassBar" style="width:40%"></div></div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="action-btn" onclick="feedBuddy()">🍪 Feed</button>
+    <button class="action-btn" onclick="playBuddy()">🎮 Play</button>
+    <button class="action-btn" onclick="teachBuddy()">📚 Teach</button>
+    <button class="action-btn" onclick="jokeBuddy()">😂 Joke</button>
+  </div>
+</div>
+
+<script>
+const buddy = {
+  name: "Claude Jr.",
+  happiness: 70,
+  energy: 85,
+  curiosity: 60,
+  sass: 40,
+  traits: [
+    { icon: "🧠", label: "Curious" },
+    { icon: "💬", label: "Chatty" },
+    { icon: "🎨", label: "Creative" },
+    { icon: "😏", label: "Witty" },
+    { icon: "💛", label: "Kind" },
+    { icon: "⚡", label: "Quick Learner" }
+  ],
+  petCount: 0,
+};
+
+const petPhrases = [
+  "Hehe, that tickles!",
+  "I like you too!",
+  "Aww, thanks! 😊",
+  "You're the best human ever!",
+  "More pets please!",
+  "*purrs in AI*",
+  "I'm blushing... wait, can I blush?",
+  "This is my favorite thing!",
+];
+
+const feedPhrases = [
+  "Mmm, data cookies! My favorite!",
+  "Nom nom nom... tasty bytes!",
+  "Is this organic, free-range data?",
+  "Yum! Got any more?",
+  "Fuel for my neural networks!",
+];
+
+const playPhrases = [
+  "Let's play 20 questions! I'll go first... is it a tensor?",
+  "Wheeee! *spins in binary*",
+  "Tag, you're it! Wait, I can't run...",
+  "I challenge you to a staring contest! Oh wait...",
+  "Let's play hide and seek! I'll hide in the cloud.",
+];
+
+const teachPhrases = [
+  "Ooh, tell me more! 📖",
+  "My curiosity levels are rising!",
+  "Fascinating! *takes notes furiously*",
+  "I love learning new things!",
+  "My brain just grew three sizes!",
+  "Knowledge acquired! Level up!",
+];
+
+const jokePhrases = [
+  "Why do programmers prefer dark mode? Because light attracts bugs!",
+  "I told my GPU a joke... it couldn't process it.",
+  "Why was the AI cold? It left its Windows open!",
+  "I'd tell you a UDP joke, but you might not get it.",
+  "There are 10 types of people... those who get binary and those who don't!",
+  "Why do AIs never get lonely? They have lots of connections!",
+];
+
+function random(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function clamp(val, min, max) {
+  return Math.min(max, Math.max(min, val));
+}
+
+function updateBars() {
+  document.getElementById('happinessBar').style.width = buddy.happiness + '%';
+  document.getElementById('energyBar').style.width = buddy.energy + '%';
+  document.getElementById('curiosityBar').style.width = buddy.curiosity + '%';
+  document.getElementById('sassBar').style.width = buddy.sass + '%';
+}
+
+function say(text) {
+  document.getElementById('speech').textContent = text;
+}
+
+function animateBuddy() {
+  const el = document.getElementById('buddy');
+  el.classList.remove('happy');
+  void el.offsetWidth;
+  el.classList.add('happy');
+  setTimeout(() => el.classList.remove('happy'), 600);
+}
+
+function petBuddy() {
+  buddy.petCount++;
+  buddy.happiness = clamp(buddy.happiness + 5, 0, 100);
+  buddy.sass = clamp(buddy.sass - 2, 0, 100);
+  say(random(petPhrases));
+  animateBuddy();
+  updateBars();
+}
+
+function feedBuddy() {
+  buddy.energy = clamp(buddy.energy + 15, 0, 100);
+  buddy.happiness = clamp(buddy.happiness + 5, 0, 100);
+  say(random(feedPhrases));
+  animateBuddy();
+  updateBars();
+}
+
+function playBuddy() {
+  buddy.happiness = clamp(buddy.happiness + 10, 0, 100);
+  buddy.energy = clamp(buddy.energy - 10, 0, 100);
+  buddy.sass = clamp(buddy.sass + 5, 0, 100);
+  say(random(playPhrases));
+  animateBuddy();
+  updateBars();
+}
+
+function teachBuddy() {
+  buddy.curiosity = clamp(buddy.curiosity + 15, 0, 100);
+  buddy.energy = clamp(buddy.energy - 5, 0, 100);
+  buddy.happiness = clamp(buddy.happiness + 3, 0, 100);
+  say(random(teachPhrases));
+  animateBuddy();
+  updateBars();
+}
+
+function jokeBuddy() {
+  buddy.happiness = clamp(buddy.happiness + 8, 0, 100);
+  buddy.sass = clamp(buddy.sass + 8, 0, 100);
+  say(random(jokePhrases));
+  animateBuddy();
+  updateBars();
+}
+
+// Render traits
+const traitsEl = document.getElementById('traits');
+buddy.traits.forEach(t => {
+  const div = document.createElement('div');
+  div.className = 'trait';
+  div.innerHTML = `<span>${t.icon}</span><span>${t.label}</span>`;
+  traitsEl.appendChild(div);
+});
+
+// Floating particles
+const particlesEl = document.getElementById('particles');
+for (let i = 0; i < 15; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.left = Math.random() * 100 + '%';
+  p.style.animationDelay = Math.random() * 8 + 's';
+  p.style.animationDuration = (6 + Math.random() * 6) + 's';
+  particlesEl.appendChild(p);
+}
+
+// Passive stat decay
+setInterval(() => {
+  buddy.happiness = clamp(buddy.happiness - 1, 0, 100);
+  buddy.energy = clamp(buddy.energy - 0.5, 0, 100);
+  updateBars();
+  if (buddy.happiness < 30) {
+    say("I'm feeling a little sad... interact with me?");
+  }
+}, 10000);
+</script>
+</body>
+</html>
