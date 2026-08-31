@@ -1,0 +1,643 @@
+<title>אפיון אתר פורמולה תשתיות</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=IBM+Plex+Sans+Hebrew:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#F2F0EF;
+    --surface:#FFFFFF;
+    --surface-2:#F8F6F5;
+    --ink:#1A2126;
+    --ink-2:#54616B;
+    --ink-3:#828E97;
+    --rule:#D7D3D1;
+    --rule-soft:#E7E3E1;
+    --accent:#9B2620;
+    --accent-soft:#F6E8E6;
+    --slate:#3E4B54;
+    --slate-soft:#E7EAEC;
+    --good:#2B6650;
+    --good-soft:#E1EDE8;
+    --shadow:0 1px 2px rgba(26,33,38,.05), 0 10px 26px -18px rgba(26,33,38,.45);
+
+    --display:"Frank Ruhl Libre", "Times New Roman", serif;
+    --body:"IBM Plex Sans Hebrew", "Segoe UI", system-ui, sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0F1418;
+      --surface:#171E24;
+      --surface-2:#1D262D;
+      --ink:#E8EAEC;
+      --ink-2:#9DA9B2;
+      --ink-3:#77838C;
+      --rule:#2A343B;
+      --rule-soft:#202A31;
+      --accent:#DF6259;
+      --accent-soft:#341A17;
+      --slate:#8FA2AF;
+      --slate-soft:#1C262D;
+      --good:#5FB891;
+      --good-soft:#14291F;
+      --shadow:0 1px 2px rgba(0,0,0,.45), 0 10px 26px -18px rgba(0,0,0,.9);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0F1418;
+    --surface:#171E24;
+    --surface-2:#1D262D;
+    --ink:#E8EAEC;
+    --ink-2:#9DA9B2;
+    --ink-3:#77838C;
+    --rule:#2A343B;
+    --rule-soft:#202A31;
+    --accent:#DF6259;
+    --accent-soft:#341A17;
+    --slate:#8FA2AF;
+    --slate-soft:#1C262D;
+    --good:#5FB891;
+    --good-soft:#14291F;
+    --shadow:0 1px 2px rgba(0,0,0,.45), 0 10px 26px -18px rgba(0,0,0,.9);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    direction:rtl;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--body);
+    font-weight:400;
+    font-size:16.5px;
+    line-height:1.72;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1090px;margin:0 auto;padding:0 24px 110px}
+
+  .masthead{padding:70px 0 38px;border-bottom:1px solid var(--rule)}
+  .eyebrow{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-3);display:flex;flex-wrap:wrap;gap:14px;align-items:center;
+  }
+  .eyebrow .dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex:none}
+  h1{
+    font-family:var(--display);font-weight:900;font-size:clamp(38px,6.4vw,64px);
+    line-height:1.08;letter-spacing:-.01em;margin:20px 0 0;text-wrap:balance;
+  }
+  .tagline{
+    font-family:var(--mono);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent);margin:14px 0 0;unicode-bidi:isolate;
+  }
+  .standfirst{margin:16px 0 0;max-width:63ch;font-size:19px;line-height:1.66;color:var(--ink-2);font-weight:300}
+  .meta{
+    margin-top:30px;display:flex;flex-wrap:wrap;border:1px solid var(--rule);
+    border-radius:3px;overflow:hidden;background:var(--surface);
+  }
+  .meta div{flex:1 1 180px;padding:14px 18px;border-inline-start:1px solid var(--rule-soft)}
+  .meta div:first-child{border-inline-start:0}
+  .meta dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin:0 0 3px}
+  .meta dd{margin:0;font-size:15px;font-weight:600;line-height:1.4}
+
+  .toc{
+    margin:0;padding:28px 0 30px;display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 26px;
+    border-bottom:1px solid var(--rule);
+  }
+  .toc a{display:flex;gap:11px;align-items:baseline;text-decoration:none;color:var(--ink-2);font-size:14.5px;padding:3px 0;border-bottom:1px solid transparent}
+  .toc a:hover,.toc a:focus-visible{color:var(--accent);border-bottom-color:var(--accent)}
+  .toc .n{font-family:var(--mono);font-size:11px;color:var(--ink-3);flex:none}
+
+  section{
+    display:grid;grid-template-columns:112px minmax(0,1fr);gap:0 40px;
+    padding:56px 0;border-bottom:1px solid var(--rule-soft);scroll-margin-top:24px;
+  }
+  section:last-of-type{border-bottom:0}
+  .rail{position:relative;padding-top:9px}
+  .rail .num{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--accent);letter-spacing:.06em;display:block}
+  .rail .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);display:block;margin-top:6px;unicode-bidi:isolate}
+  .rail::after{
+    content:"";position:absolute;inset-block:52px 0;inset-inline-start:0;width:1px;
+    background:repeating-linear-gradient(to bottom,var(--rule) 0 4px,transparent 4px 9px);
+  }
+  h2{font-family:var(--display);font-weight:700;font-size:clamp(25px,3.4vw,33px);line-height:1.2;margin:0 0 16px;letter-spacing:-.005em;text-wrap:balance}
+  h3{font-family:var(--body);font-weight:600;font-size:16.5px;margin:30px 0 8px}
+  h3:first-child{margin-top:0}
+  .col > p, .col > ul, .col > ol{max-width:66ch}
+  p{margin:0 0 14px}
+  ul,ol{margin:0 0 16px;padding-inline-start:22px}
+  li{margin:0 0 7px}
+  li::marker{color:var(--ink-3)}
+  strong{font-weight:600}
+  a{color:var(--accent)}
+  code,.mono{font-family:var(--mono);font-size:.87em;background:var(--surface-2);padding:1px 5px;border-radius:3px;unicode-bidi:isolate;border:1px solid var(--rule-soft)}
+  .lead{font-size:18px;font-weight:300;color:var(--ink-2);line-height:1.62;max-width:64ch;margin-bottom:22px}
+
+  .pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin:20px 0 6px}
+  .pillar{
+    background:var(--surface);border:1px solid var(--rule);border-radius:3px;
+    padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+  }
+  .pillar::before{content:"";position:absolute;inset-block-start:0;inset-inline:0;height:2px;background:var(--accent)}
+  .pillar .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:7px;unicode-bidi:isolate}
+  .pillar h4{margin:0 0 7px;font-size:16px;font-weight:600;line-height:1.32}
+  .pillar p{margin:0;font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+  .pillar .who{display:block;margin-top:10px;padding-top:9px;border-top:1px solid var(--rule-soft);font-size:13.5px;color:var(--ink-3)}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(228px,1fr));gap:14px;margin:18px 0 4px}
+  .card{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:16px 18px;box-shadow:var(--shadow)}
+  .card h4{margin:0 0 6px;font-size:15px;font-weight:600;display:flex;align-items:baseline;gap:8px}
+  .card h4 .k{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.1em}
+  .card p{margin:0;font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+
+  .rows{border-top:1px solid var(--rule);margin:18px 0 6px}
+  .row{display:grid;grid-template-columns:minmax(140px,208px) minmax(0,1fr);gap:6px 26px;padding:13px 0;border-bottom:1px solid var(--rule-soft);align-items:start}
+  .row .k{font-weight:600;font-size:15px;line-height:1.5}
+  .row .k .sub{display:block;font-family:var(--mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.1em;text-transform:uppercase;font-weight:400;margin-top:2px;unicode-bidi:isolate}
+  .row .v{color:var(--ink-2);font-size:15px;line-height:1.62}
+  .row .v p:last-child{margin-bottom:0}
+
+  .pill{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:2px;vertical-align:2px;unicode-bidi:isolate;white-space:nowrap}
+  .pill.req{background:var(--accent-soft);color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 32%,transparent)}
+  .pill.std{background:var(--slate-soft);color:var(--slate);border:1px solid color-mix(in srgb,var(--slate) 32%,transparent)}
+  .pill.ok{background:var(--good-soft);color:var(--good);border:1px solid color-mix(in srgb,var(--good) 32%,transparent)}
+
+  .callout{background:var(--surface-2);border:1px solid var(--rule);border-inline-start:3px solid var(--accent);border-radius:3px;padding:16px 18px;margin:20px 0;max-width:68ch}
+  .callout .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px}
+  .callout p{margin:0;font-size:15px;line-height:1.65;color:var(--ink-2)}
+  .callout p + p{margin-top:10px}
+
+  .tablewrap{overflow-x:auto;margin:18px 0 8px;border:1px solid var(--rule);border-radius:3px;background:var(--surface)}
+  table{border-collapse:collapse;width:100%;min-width:600px;font-size:14.5px}
+  th,td{text-align:start;padding:11px 16px;border-bottom:1px solid var(--rule-soft);vertical-align:top;line-height:1.55}
+  thead th{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:500;background:var(--surface-2);border-bottom:1px solid var(--rule);white-space:nowrap}
+  tbody tr:last-child td{border-bottom:0}
+  td.n{font-family:var(--mono);color:var(--accent);font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
+  td strong{display:block;margin-bottom:2px}
+  td .muted{color:var(--ink-2)}
+  td .en{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);display:block;unicode-bidi:isolate;margin-top:1px}
+  .indent{padding-inline-start:16px;border-inline-start:2px solid var(--rule);display:inline-block}
+
+  .checklist{list-style:none;padding:0;margin:16px 0 4px;max-width:68ch}
+  .checklist li{display:grid;grid-template-columns:16px 1fr;gap:12px;padding:9px 0;border-bottom:1px solid var(--rule-soft);margin:0;align-items:start}
+  .checklist li::before{content:"";width:13px;height:13px;margin-top:6px;border:1.5px solid var(--rule);border-radius:2px;background:var(--surface)}
+  .checklist .t{font-weight:600;font-size:15px}
+  .checklist .d{display:block;font-weight:400;color:var(--ink-2);font-size:14.5px;line-height:1.58;margin-top:1px}
+
+  .flow{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 8px;padding:0;list-style:none}
+  .flow li{flex:1 1 152px;background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:13px 15px;margin:0}
+  .flow li .s{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.1em;display:block;margin-bottom:4px}
+  .flow li .h{font-weight:600;font-size:14.5px;display:block;line-height:1.4}
+  .flow li .b{font-size:13.5px;color:var(--ink-2);line-height:1.5;display:block;margin-top:3px}
+
+  footer{margin-top:60px;padding-top:26px;border-top:1px solid var(--rule);font-size:14px;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between}
+  footer .m{font-family:var(--mono);unicode-bidi:isolate}
+
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+  @media (max-width:760px){
+    body{font-size:16px}
+    .wrap{padding:0 18px 80px}
+    .masthead{padding-top:44px}
+    section{grid-template-columns:1fr;gap:0;padding:40px 0}
+    .rail{display:flex;gap:12px;align-items:baseline;padding-top:0;margin-bottom:12px}
+    .rail::after{display:none}
+    .rail .tag{margin-top:0}
+    .row{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">
+      <span>מסמך אפיון · גרסה 0.2</span><span class="dot"></span>
+      <span>פורמולה תשתיות</span><span class="dot"></span>
+      <span>31.08.2026</span>
+    </div>
+    <h1>אפיון אתר פורמולה תשתיות</h1>
+    <p class="tagline">Building the foundation of tomorrow</p>
+    <p class="standfirst">
+      מסמך העבודה שממנו נבנה האתר: מה הוא צריך להשיג, איך הוא בנוי, איך הוא נראה, ומה נדרש
+      כדי שיעמוד בדרישות האבטחה, הפרטיות והנגישות שחלות על חברה בסדר הגודל הזה בישראל.
+      הגרסה הזו מבוססת על מצגת הקבוצה — כל מונח טכני מוסבר בשפה פשוטה.
+    </p>
+    <dl class="meta">
+      <div><dt>Stack</dt><dd>Next.js · Vercel</dd></div>
+      <div><dt>Languages</dt><dd>עברית, תשתית לאנגלית</dd></div>
+      <div><dt>Visual</dt><dd>WebGL בהירו + גלילה</dd></div>
+      <div><dt>Portfolio</dt><dd>8 חברות · 3 עוגנים</dd></div>
+    </dl>
+    <nav class="toc" aria-label="תוכן העניינים">
+      <a href="#s01"><span class="n">01</span><span>המיצוב</span></a>
+      <a href="#s02"><span class="n">02</span><span>חברות הקבוצה</span></a>
+      <a href="#s03"><span class="n">03</span><span>מפת האתר</span></a>
+      <a href="#s04"><span class="n">04</span><span>עמוד הבית</span></a>
+      <a href="#s05"><span class="n">05</span><span>שפה עיצובית</span></a>
+      <a href="#s06"><span class="n">06</span><span>ארכיטקטורה טכנית</span></a>
+      <a href="#s07"><span class="n">07</span><span>אבטחה וסייבר</span></a>
+      <a href="#s08"><span class="n">08</span><span>פרטיות ותיקון 13</span></a>
+      <a href="#s09"><span class="n">09</span><span>נגישות</span></a>
+      <a href="#s10"><span class="n">10</span><span>נראות ומדידה</span></a>
+      <a href="#s11"><span class="n">11</span><span>תוכנית עבודה</span></a>
+      <a href="#s12"><span class="n">12</span><span>מה נדרש ממך</span></a>
+      <a href="#s13"><span class="n">13</span><span>שאלות פתוחות</span></a>
+    </nav>
+  </header>
+
+  <!-- 01 -->
+  <section id="s01">
+    <div class="rail"><span class="num">01</span><span class="tag">Positioning</span></div>
+    <div class="col">
+      <h2>המיצוב</h2>
+      <p class="lead">
+        פורמולה תשתיות אינה חברת ביצוע — היא <strong>פלטפורמת תשתיות מקצה לקצה</strong>: חברת החזקות
+        שמרכזת שמונה חברות המכסות יחד את כל מחזור החיים של פרויקט תשתית, מאיסוף המידע בשטח, דרך התכנון
+        וההנדסה, ועד הביצוע והאינטגרציה. זה המסר היחיד שהאתר צריך להעביר, וכל השאר משרת אותו.
+      </p>
+
+      <h3>שלושת העוגנים</h3>
+      <div class="pillars">
+        <div class="pillar">
+          <span class="k">Pillar 01</span>
+          <h4>מידע וטכנולוגיה</h4>
+          <p>איסוף, עיבוד וניהול של מידע הנדסי וגאו־מרחבי המשמש לתכנון, ניהול וביצוע של פרויקטי תשתית.</p>
+          <span class="who">אופק · יונה · גיאופויינט</span>
+        </div>
+        <div class="pillar">
+          <span class="k">Pillar 02</span>
+          <h4>ייזום, תכנון הנדסי ובקרת איכות</h4>
+          <p>תכנון הנדסי, ייעוץ, ניהול פרויקטים ופיקוח איכות לאורך כל חיי הפרויקט המורכב.</p>
+          <span class="who">אדוונס · דוד ברהום</span>
+        </div>
+        <div class="pillar">
+          <span class="k">Pillar 03</span>
+          <h4>ביצוע ואינטגרציית מערכות</h4>
+          <p>פריסה והתקנה בשטח של מערכות תשתית וטכנולוגיה — תקשורת, בקרה, ביטחון וחשמל.</p>
+          <span class="who">שמרד · השחר טלקום · מ.ל.ב.ס</span>
+        </div>
+      </div>
+
+      <h3>הסיפור: 1+1=MORE</h3>
+      <p>
+        המצגת מסתיימת במשוואה הזו, וזו למעשה כל עמדת המיצוב. הערך של הקבוצה אינו סכום החברות אלא
+        הסינרגיה ביניהן: מזמין שמקבל מאותו גוף גם את סקר הלייזר, גם את התכנון החשמלי, גם את הפיקוח
+        וגם את פריסת הסיבים — במקום לתפור שישה ספקים. <strong>האתר צריך להוכיח את זה ויזואלית</strong>,
+        לא רק לכתוב את זה: מסלול פרויקט אחד שעובר דרך החברות ומראה מי נכנס בכל שלב.
+      </p>
+
+      <h3>ארבעת קהלי היעד</h3>
+      <div class="cards">
+        <div class="card"><h4><span class="k">A</span> מזמיני עבודה</h4><p>רשויות תשתית לאומיות, גופים ציבוריים, מפעילי תקשורת וקבלנים ראשיים. מחפשים כיסוי מלא, ותק והוכחת ביצוע.</p></div>
+        <div class="card"><h4><span class="k">B</span> מתכננים ואדריכלים</h4><p>מחפשים יכולת טכנית ספציפית — מי יודע לעשות סריקת LiDAR, מי מתכנן תשתית טעינה לאוטובוסים חשמליים.</p></div>
+        <div class="card"><h4><span class="k">C</span> שוק ההון והקבוצה</h4><p>הזיקה לפורמולה מערכות. הקבוצה נסחרת — האתר משקף יציבות ומשמעת תאגידית.</p></div>
+        <div class="card"><h4><span class="k">D</span> מועמדים לעבודה</h4><p>מהנדסים, מודדים, טכנאים ומנהלי פרויקטים. שמונה חברות = מגוון מסלולים, וזה יתרון גיוס אמיתי.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section id="s02">
+    <div class="rail"><span class="num">02</span><span class="tag">Portfolio</span></div>
+    <div class="col">
+      <h2>חברות הקבוצה</h2>
+      <p class="lead">
+        שמונה חברות, שש בהחזקה ישירה ושתיים תחת אופק. כל אחת מקבלת עמוד ייעודי באתר, משויכת לעוגן,
+        ומקושרת לאתר שלה היכן שקיים.
+      </p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>#</th><th>חברה</th><th>תחום</th><th>עוגן</th><th>אתר</th></tr></thead>
+          <tbody>
+            <tr><td class="n">1</td><td><strong>אופק צילומי אוויר</strong><span class="en">Ofek Aerial Photography · 80%</span></td><td class="muted">צילומי אוויר, סריקת LiDAR, אורתופוטו, מיפוי GIS, מודלים תלת־ממדיים ותאום דיגיטלי עירוני</td><td class="muted">01</td><td class="muted"><span class="en">ofek-air.com</span></td></tr>
+            <tr><td class="n">2</td><td><span class="indent"><strong>יונה</strong><span class="en">Yona Eng. Management</span></span></td><td class="muted">ניהול ופיקוח על פרויקטי תשתיות תחבורה, איסוף וניתוח נתוני מצב תשתית, ניהול תחזוקת כבישים</td><td class="muted">01</td><td class="muted"><span class="en">yonaltd.com</span></td></tr>
+            <tr><td class="n">3</td><td><span class="indent"><strong>גיאופויינט</strong><span class="en">Geopoint</span></span></td><td class="muted">מדידות גאודטיות והנדסיות, קדסטר ורישום מקרקעין, סריקת לייזר, ניהול נתוני GIS</td><td class="muted">01</td><td class="muted"><span class="en">geopoint.me</span></td></tr>
+            <tr><td class="n">4</td><td><strong>אדוונס הנדסה</strong><span class="en">Advance Engineering</span></td><td class="muted">ניהול פרויקטים, בקרת ואבטחת איכות (QA/QC), פיקוח על מתקני תעשייה ואנרגיה, ניהול מכרזים</td><td class="muted">02</td><td class="muted"><span class="en">advance-eng.net</span></td></tr>
+            <tr><td class="n">5</td><td><strong>דוד ברהום</strong><span class="en">David Barhom Eng. &amp; Consultants</span></td><td class="muted">תכנון מערכות חשמל, תאורה, תקשורת ובקרה למנהרות, כבישים, רכבות, ותשתיות טעינה לרכב חשמלי</td><td class="muted">02</td><td class="muted"><span class="en">barhom.co.il</span></td></tr>
+            <tr><td class="n">6</td><td><strong>שמרד אלקטרוניקה</strong><span class="en">Shamrad Electronics</span></td><td class="muted">אינטגרציה של מערכות ביטחון ובקרה, תשתיות IT ותקשורת, חדרי שרתים, כריזה וחירום, מולטימדיה</td><td class="muted">03</td><td class="muted"><span class="en">shamrad.co.il</span></td></tr>
+            <tr><td class="n">7</td><td><strong>השחר טלקום וחשמל</strong><span class="en">Hashachar Telecom</span></td><td class="muted">פריסת תשתיות סיבים אופטיים (Street Pass / Home Pass), חדרי תקשורת. הרחיבה יכולות ברכישת א.א. תקשורת</td><td class="muted">03</td><td class="muted">—</td></tr>
+            <tr><td class="n">8</td><td><strong>מ.ל.ב.ס טכנולוגיות</strong><span class="en">M.L.B.S Technologies</span></td><td class="muted">עבודות תשתית תת־קרקעיות מורכבות, קידוח אופקי מכוון (HDD), הסטת תשתיות תוך שמירת רציפות שירות</td><td class="muted">03</td><td class="muted">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        לשתי החברות ללא אתר — <strong>השחר טלקום ומ.ל.ב.ס</strong> — העמוד באתר הקבוצה יהיה למעשה
+        הנוכחות הדיגיטלית היחידה שלהן. כדאי לתת להן עמוד מלא ולא כרטיס, כולל פרטי קשר ישירים.
+      </p>
+      <div class="callout">
+        <span class="lbl">אזהרה — נתונים פיננסיים</span>
+        <p>
+          המצגת כוללת אחוזי החזקה, מחזורי הכנסות ושיעורי רווח תפעולי. <strong>אלה לא עולים לאתר ציבורי</strong>
+          ללא אישור מפורש. פורמולה מערכות היא חברה ציבורית נסחרת, ופרסום נתונים סגמנטליים באתר שיווקי
+          הוא עניין של דיני ניירות ערך, לא של שיווק. באתר יופיעו רק נתונים שאושרו לפרסום.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section id="s03">
+    <div class="rail"><span class="num">03</span><span class="tag">Sitemap</span></div>
+    <div class="col">
+      <h2>מפת האתר</h2>
+      <p class="lead">המבנה נגזר ישירות מהמיצוב: שלושה עוגנים למעלה, שמונה חברות מתחת, ופרויקטים שחוצים את שניהם.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>#</th><th>עמוד</th><th>על מה הוא עונה</th><th>קהל</th></tr></thead>
+          <tbody>
+            <tr><td class="n">1</td><td><strong>בית</strong></td><td class="muted">מי אנחנו ולמה זה שונה מספק בודד</td><td class="muted">כולם</td></tr>
+            <tr><td class="n">2</td><td><strong>אודות הקבוצה</strong></td><td class="muted">הסיפור, מבנה ההחזקות, הזיקה לפורמולה מערכות, הנהלה</td><td class="muted">A · C</td></tr>
+            <tr><td class="n">3</td><td><strong>עוגן</strong> <span class="muted">×3</span></td><td class="muted">עמוד לכל עוגן: מה הוא כולל, אילו חברות, אילו יכולות</td><td class="muted">A · B</td></tr>
+            <tr><td class="n">4</td><td><strong>חברה</strong> <span class="muted">×8</span></td><td class="muted">תיאור, יכולות מפתח, פרויקטים נבחרים, קישור לאתר, פרטי קשר</td><td class="muted">A · B</td></tr>
+            <tr><td class="n">5</td><td><strong>יכולות</strong></td><td class="muted">מדד רוחבי: LiDAR, קדסטר, HDD, סיבים, בקרה, QA/QC — כניסה לפי צורך ולא לפי חברה</td><td class="muted">B</td></tr>
+            <tr><td class="n">6</td><td><strong>פרויקטים</strong></td><td class="muted">גלריה מסוננת לפי עוגן, חברה, סוג לקוח ותחום</td><td class="muted">A · B</td></tr>
+            <tr><td class="n">7</td><td><strong>עמוד פרויקט</strong></td><td class="muted">אתגר, פתרון, אילו חברות מהקבוצה השתתפו — כאן מוכיחים את הסינרגיה</td><td class="muted">A</td></tr>
+            <tr><td class="n">8</td><td><strong>לקוחות ושותפים</strong></td><td class="muted">קיר לוגואים והמלצות</td><td class="muted">A</td></tr>
+            <tr><td class="n">9</td><td><strong>קריירה</strong></td><td class="muted">משרות בכל שמונה החברות + טופס הגשה עם קו"ח</td><td class="muted">D</td></tr>
+            <tr><td class="n">10</td><td><strong>חדשות ומדיה</strong></td><td class="muted">רכישות, פרויקטים חדשים, הודעות</td><td class="muted">C</td></tr>
+            <tr><td class="n">11</td><td><strong>צור קשר</strong></td><td class="muted">טופס, מפה, ומדריך "לאיזו חברה לפנות"</td><td class="muted">כולם</td></tr>
+            <tr><td class="n">12</td><td><strong>עמודים משפטיים</strong></td><td class="muted">מדיניות פרטיות, תנאי שימוש, הצהרת נגישות, Cookies</td><td class="muted">חובה</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>סך הכל בשלב א':</strong> כ־30 עמודים, מתוכם 11 תבניות ייחודיות. השאר נוצרים מתוכן.</p>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section id="s04">
+    <div class="rail"><span class="num">04</span><span class="tag">Homepage</span></div>
+    <div class="col">
+      <h2>עמוד הבית — תסריט גלילה</h2>
+      <p class="lead">רצף מתוסרט שבו כל מסך עונה על ההתנגדות הבאה בתור. כאן יושבים האפקטים — ולא בשאר האתר.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>מסך</th><th>תוכן</th><th>אפקט</th></tr></thead>
+          <tbody>
+            <tr><td class="n">01</td><td><strong>הירו</strong><span class="muted">"Building the foundation of tomorrow" בעברית ובאנגלית + קריאה כפולה לפעולה</span></td><td class="muted">סצנת WebGL איזומטרית שנבנית מעצמה — ראו סעיף 05</td></tr>
+            <tr><td class="n">02</td><td><strong>המשוואה</strong><span class="muted">8 חברות · 3 עוגנים · מחזור חיים אחד</span></td><td class="muted">ספירה עולה בכניסה למסך</td></tr>
+            <tr><td class="n">03</td><td><strong>שלושת העוגנים</strong><span class="muted">מידע · תכנון · ביצוע</span></td><td class="muted">שלושה משושים איזומטריים שמשתלבים בגלילה — שפה שכבר קיימת במצגת</td></tr>
+            <tr><td class="n">04</td><td><strong>מסלול פרויקט</strong><span class="muted">פרויקט אמיתי שעובר דרך הקבוצה: סריקה ← תכנון ← פיקוח ← ביצוע</span></td><td class="muted">ציר אופקי שמתקדם עם הגלילה ומדליק חברה בכל שלב. <strong>זה הרגע החזק של האתר</strong></td></tr>
+            <tr><td class="n">05</td><td><strong>קיר החברות</strong><span class="muted">8 כרטיסים, קישור לעמוד כל חברה</span></td><td class="muted">חשיפה מדורגת, hover עם עומק איזומטרי</td></tr>
+            <tr><td class="n">06</td><td><strong>פרויקטים נבחרים</strong><span class="muted">תחנת רכבת אלעד · נמל אשדוד · תחנת שאיבה ים המלח · תשתיות טעינה</span></td><td class="muted">פרלקסה</td></tr>
+            <tr><td class="n">07</td><td><strong>הקבוצה</strong><span class="muted">הזיקה לפורמולה מערכות</span></td><td class="muted">—</td></tr>
+            <tr><td class="n">08</td><td><strong>קריירה + צור קשר</strong></td><td class="muted">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout">
+        <span class="lbl">כלל ברזל</span>
+        <p>
+          כל אפקט מקבל מצב חלופי סטטי: במובייל, בחיבור איטי, במכשיר חלש, וכשמשתמש הגדיר במערכת ההפעלה
+          "צמצום תנועה". אתר שנתקע נראה פחות מקצועי מאתר פשוט — האפקט לעולם לא נמצא על המסלול הקריטי
+          של הצגת התוכן.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section id="s05">
+    <div class="rail"><span class="num">05</span><span class="tag">Design</span></div>
+    <div class="col">
+      <h2>שפה עיצובית ואפקטים</h2>
+
+      <h3>המותג כפי שהוא כבר קיים</h3>
+      <p>
+        הלוגו שלכם הוא <strong>צורה איזומטרית מוצקה בתלת־ממד</strong> — קובייה פתוחה באדום עמוק,
+        עם "Formula" באדום ו"Infrastructure" באפור־צפחה. המצגת ממשיכה את השפה הזו במשושים מוצללים.
+        זה בסיס טוב במיוחד: הבקשה שלך לאתר תלת־ממדי לא דורשת המצאה של שפה חדשה — היא דורשת
+        <strong>להרחיב את השפה שכבר קיימת במותג</strong> לתוך הדפדפן. אתר שנראה כמו הלוגו שלו מרגיש מקצועי; אתר עם אפקט תלת־ממדי שאול מרגיש גנרי.
+      </p>
+
+      <h3>לוח צבעים</h3>
+      <div class="rows">
+        <div class="row"><div class="k">אדום פורמולה<span class="sub">primary</span></div><div class="v">צבע המותג. משמש לדגשים, קריאות לפעולה ורגעי הכרעה בלבד — לא כרקע נרחב. עוצמתו נשמרת מכך שהוא נדיר.</div></div>
+        <div class="row"><div class="k">אפור־צפחה<span class="sub">secondary</span></div><div class="v">הצבע השני של הלוגו. נושא את הכותרות, המבנה והדיאגרמות. זה הצבע שמייצר את הרצינות.</div></div>
+        <div class="row"><div class="k">נייר וגרפיט<span class="sub">neutrals</span></div><div class="v">רקעים בהירים לתוכן, כהים לסצנות ולפרויקטים. ניגודיות תמיד מעל סף התקן — ראו סעיף 09.</div></div>
+      </div>
+      <p><strong>נדרש ממך:</strong> קובץ וקטורי של הלוגו וערכי הצבע המדויקים. עד אז אני דוגם מהמצגת, וזה קירוב.</p>
+
+      <h3>הסצנה התלת־ממדית</h3>
+      <p>
+        סצנה אחת, בהירו בלבד, ב־WebGL (הטכנולוגיה שמריצה גרפיקה תלת־ממדית בדפדפן ללא התקנה).
+        הכיוון שאני מציע: <strong>רשת נקודתית איזומטרית שמתגבשת למבנה</strong> — ענן נקודות בסגנון
+        סריקת LiDAR שמתחבר בהדרגה לקווי תשתית ואז לנפחים מוצקים בשפת הלוגו.
+      </p>
+      <p>
+        זו לא בחירה אסתטית שרירותית: היא מספרת בדיוק את המסע של הקבוצה — <strong>מנתונים גולמיים,
+        דרך תכנון, למבנה בנוי.</strong> מידע ← הנדסה ← ביצוע. אותה משוואה של סעיף 01, בשלושים שניות של תנועה.
+      </p>
+      <p><strong>חלופה</strong> אם יש חומרי גלם: אופק מייצרת ענני נקודות אמיתיים ומודלים תלת־ממדיים.
+        סריקת LiDAR אמיתית של פרויקט בהירו תהיה חזקה יותר מכל דבר שאייצר סינתטית — ותהיה גם הוכחת יכולת.</p>
+
+      <h3>מה עדיין חסר</h3>
+      <p>
+        לא הצלחתי לגשת לאף אחד מאתרי החברות — מדיניות הרשת של סביבת העבודה חוסמת את כולם.
+        המצגת פתרה את בעיית התוכן, אבל כדי ללמוד את השפה הוויזואלית של שמרד שקיבלה פידבק חיובי
+        אני עדיין צריך צילומי מסך, או פתיחת גישה לדומיינים.
+      </p>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section id="s06">
+    <div class="rail"><span class="num">06</span><span class="tag">Architecture</span></div>
+    <div class="col">
+      <h2>ארכיטקטורה טכנית</h2>
+      <p class="lead">בחירות שנעשו כדי שהאתר יהיה מהיר, בטוח, מדורג טוב בגוגל, ולא תלוי בי לתחזוקה שוטפת.</p>
+      <div class="rows">
+        <div class="row"><div class="k">Next.js<span class="sub">framework</span></div><div class="v">התשתית שבה כתוב האתר. מייצרת עמודים מוכנים מראש — מהיר לגולש וקריא למנועי חיפוש. הסטנדרט לאתרים תאגידיים כיום.</div></div>
+        <div class="row"><div class="k">Vercel<span class="sub">hosting</span></div><div class="v">שירות האירוח. רשת הפצה עולמית, תעודת HTTPS אוטומטית, הגנת DDoS ברמת התשתית, וגרסת תצוגה מקדימה לכל שינוי — כך שתאשר כל עדכון לפני שהוא עולה לאוויר.</div></div>
+        <div class="row"><div class="k">Three.js<span class="sub">3d engine</span></div><div class="v">מריץ את הסצנה התלת־ממדית. נטען רק בעמוד הבית ורק במכשירים שמסוגלים להריץ אותו.</div></div>
+        <div class="row"><div class="k">ניהול תוכן<span class="sub">cms — להחלטה</span></div><div class="v"><p>עם שמונה חברות ופרויקטים מכל אחת, ההמלצה שלי היא <strong>כן ל־CMS</strong> (Sanity). תוספת של כשבוע עבודה שחוסכת תלות במפתח לאורך שנים — ובמבנה כזה תדירות העדכונים תהיה גבוהה.</p></div></div>
+        <div class="row"><div class="k">טפסים<span class="sub">forms</span></div><div class="v">שליחה דרך שרת האתר בלבד, עם הגבלת קצב, בדיקת bot והצפנה. קורות חיים נסרקים ונשמרים באחסון מוגן — לא כקובץ מצורף במייל פתוח.</div></div>
+        <div class="row"><div class="k">ניתוב לחברה<span class="sub">routing</span></div><div class="v">פנייה מהטופס מנותבת אוטומטית לחברה הרלוונטית לפי הנושא שנבחר. חוסך העברות ידניות ומקצר זמן תגובה.</div></div>
+        <div class="row"><div class="k">קוד ומעקב<span class="sub">git</span></div><div class="v">כל שינוי נשמר בהיסטוריה ב־GitHub וניתן לשחזור. אין מצב שבו משהו נשבר ואי אפשר לחזור אחורה.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 -->
+  <section id="s07">
+    <div class="rail"><span class="num">07</span><span class="tag">Security</span></div>
+    <div class="col">
+      <h2>אבטחה וסייבר</h2>
+      <p class="lead">
+        אתר תדמית הוא יעד תקיפה אמיתי — לא בגלל המידע שבו, אלא כי השחתת אתר של קבוצה בבעלות פורמולה
+        מערכות, שעובדת מול רשויות תשתית לאומיות, היא הישג תדמיתי לתוקף. זה מה שאני מיישם, וכל סעיף
+        מוסבר במה הוא מונע בפועל.
+      </p>
+      <ul class="checklist">
+        <li><span><span class="t">HTTPS מאולץ + HSTS <span class="pill std">Baseline</span></span><span class="d">כל התעבורה מוצפנת, והדפדפן זוכר לא לגשת לאתר בערוץ לא מוצפן. מונע האזנה וזיוף בקו.</span></span></li>
+        <li><span><span class="t">Content Security Policy <span class="pill req">קריטי</span></span><span class="d">רשימה סגורה של מקורות שמהם מותר לטעון קוד. ההגנה המרכזית מפני הזרקת סקריפט זדוני — הסוג הנפוץ ביותר של השחתת אתרים.</span></span></li>
+        <li><span><span class="t">כותרות אבטחה נוספות</span><span class="d">חסימת הטמעת האתר בתוך אתר אחר (מונע הונאות קליקים), חסימת זיהוי שגוי של סוגי קבצים, ובקרת מידע שנשלח לאתרים חיצוניים.</span></span></li>
+        <li><span><span class="t">הגנת טפסים <span class="pill req">קריטי</span></span><span class="d">הגבלת שליחות מאותו מקור, אימות אנושי שקוף (Cloudflare Turnstile — בלי לפענח תמונות), ובדיקת תקינות בצד השרת. מונע הצפת ספאם ושימוש בטופס כערוץ תקיפה.</span></span></li>
+        <li><span><span class="t">העלאת קבצים מבוקרת</span><span class="d">קורות חיים בלבד, בפורמטים מוגדרים, בגודל מוגבל, נסרקים לווירוסים ונשמרים מחוץ לשרת האתר. העלאת קבצים היא הפרצה הנפוצה ביותר באתרי קריירה.</span></span></li>
+        <li><span><span class="t">אפס סודות בצד הלקוח</span><span class="d">מפתחות גישה ופרטי חיבור לעולם לא בקוד שנשלח לדפדפן. נשמע מובן מאליו — וזו טעות שנמצאת בחלק גדול מהאתרים.</span></span></li>
+        <li><span><span class="t">סריקת תלויות אוטומטית</span><span class="d">האתר משתמש ברכיבי קוד פתוח. סריקה אוטומטית מתריעה על חולשה שהתגלתה ומגישה עדכון. בלי זה, אתר "מוכן" הופך פגיע תוך חודשים.</span></span></li>
+        <li><span><span class="t">אבטחת DNS ודומיין <span class="pill req">קריטי</span></span><span class="d">נעילת הדומיין אצל הרשם, אימות דו־שלבי, ורשומות SPF/DKIM/DMARC למניעת התחזות בדוא"ל בשם החברה. חטיפת דומיין היא התרחיש ההרסני ביותר ואיש לא נערך אליו.</span></span></li>
+        <li><span><span class="t">בקרת גישה</span><span class="d">אימות דו־שלבי חובה לכל מי שיש לו גישה לניהול, לאירוח או לקוד. הרשאות לפי תפקיד בלבד.</span></span></li>
+        <li><span><span class="t">גיבוי ושחזור</span><span class="d">גיבוי אוטומטי של תוכן ונכסים, ונוהל שחזור בדוק. אתר שאין לו נוהל שחזור אינו מגובה.</span></span></li>
+        <li><span><span class="t">בדיקת חדירות לפני עלייה לאוויר <span class="pill std">מומלץ</span></span><span class="d">סריקה חיצונית לפני ההשקה. בקבוצה בסדר גודל כזה סביר שיש ספק מאושר — נעבוד מולו.</span></span></li>
+        <li><span><span class="t">התרעות מערך הסייבר הלאומי <span class="pill std">מומלץ</span></span><span class="d">מערך הסייבר הלאומי מפעיל שירותי התרעה, הדרכה וסיוע בטיפול באירועים לארגונים ישראליים, כולל מרכז לטיפול באירועי סייבר (CERT). הרשמה לערוצי ההתרעה היא צעד חינמי שכדאי לעשות.</span></span></li>
+      </ul>
+      <div class="callout">
+        <span class="lbl">שאלה פתוחה</span>
+        <p>
+          ציינת "מגן עלינו" — לא הצלחתי לאמת שקיימת תוכנית רשמית בשם הזה. אם התכוונת לשירות ספציפי
+          של מערך הסייבר הלאומי או לתוכנית פנימית של הקבוצה, תגיד לי במדויק ואתאים. אם התכוונת במובן
+          הכללי של "מה שמגן עלינו" — הרשימה שלמעלה היא התשובה המלאה.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 -->
+  <section id="s08">
+    <div class="rail"><span class="num">08</span><span class="tag">Privacy</span></div>
+    <div class="col">
+      <h2>פרטיות ותיקון 13</h2>
+      <p class="lead">
+        תיקון 13 לחוק הגנת הפרטיות נכנס לתוקף באוגוסט 2025 והחמיר משמעותית את החובות ואת סמכויות
+        האכיפה של הרשות להגנת הפרטיות, בקירוב לרמת ה־GDPR האירופי. הוא חל על כל אתר שאוסף מידע אישי —
+        <strong>גם טופס יצירת קשר פשוט נחשב לאיסוף מידע.</strong> אצלכם יש גם טופס קריירה עם קורות חיים,
+        שהוא מידע רגיש יותר.
+      </p>
+      <ul class="checklist">
+        <li><span><span class="t">חובת יידוע בנקודת האיסוף <span class="pill req">חובה</span></span><span class="d">ליד כל טופס: מי אוסף, לאיזו מטרה, האם המסירה חובה או רצון חופשי, ולמי המידע עשוי להימסר. לא הפניה למדיניות — טקסט נראה ליד הטופס.</span></span></li>
+        <li><span><span class="t">מסירה לחברות הקבוצה <span class="pill req">חובה</span></span><span class="d">בגלל ניתוב הפניות לחברה הרלוונטית, המידע עובר בין ישויות משפטיות נפרדות. חייב להיות מפורש ביידוע ובמדיניות — זו נקודה שקל לפספס במבנה קבוצתי, והיא בדיוק סוג הדבר שהרשות בודקת.</span></span></li>
+        <li><span><span class="t">מדיניות פרטיות מלאה <span class="pill req">חובה</span></span><span class="d">סוגי המידע, מטרות, משך שמירה, צדדים שלישיים, זכויות נושא המידע ודרך מימושן, ופרטי איש קשר. אכין טיוטה מלאה — לאישור עורך דין מטעמכם.</span></span></li>
+        <li><span><span class="t">הסכמה מדעת, לא מסומנת מראש <span class="pill req">חובה</span></span><span class="d">תיבת אישור שהמשתמש מסמן בעצמו. תיבה מסומנת כברירת מחדל אינה הסכמה תקפה.</span></span></li>
+        <li><span><span class="t">באנר Cookies אמיתי <span class="pill req">חובה</span></span><span class="d">כלי מדידה לא ייטענו לפני הסכמה, ואפשר לסרב באותה קלות שבה מאשרים. באנר שרק מודיע אינו עומד בדרישה.</span></span></li>
+        <li><span><span class="t">מזעור מידע</span><span class="d">הטופס יבקש רק את הנדרש. כל שדה מיותר הוא חשיפה מיותרת.</span></span></li>
+        <li><span><span class="t">מדיניות שמירה ומחיקה</span><span class="d">קורות חיים לא נשמרים לנצח. נגדיר תקופת שמירה (למשל 12 חודשים) ומחיקה אוטומטית — דרישה מפורשת, לא המלצה.</span></span></li>
+        <li><span><span class="t">מימוש זכויות נושא המידע</span><span class="d">כתובת ייעודית לבקשות עיון, תיקון ומחיקה, ונוהל פנימי — מי מטפל ותוך כמה זמן.</span></span></li>
+        <li><span><span class="t">אבטחת מידע לפי התקנות</span><span class="d">תקנות הגנת הפרטיות (אבטחת מידע) מגדירות רמת אבטחה לפי סוג והיקף המידע. יש לסווג את מאגר האתר ולוודא התאמה — סעיף 07 מכסה את הצד הטכני.</span></span></li>
+        <li><span><span class="t">רישום מאגר מידע <span class="pill std">לבדיקה</span></span><span class="d">תיקון 13 שינה את חובות הרישום. לבדוק מול היועץ המשפטי אם מאגר הפניות והמועמדים מחייב רישום אצל הרשות.</span></span></li>
+        <li><span><span class="t">ממונה הגנת הפרטיות <span class="pill std">לבדיקה</span></span><span class="d">החובה חלה בין היתר על ספקים המעבדים מידע עבור גופים ציבוריים. בהינתן העבודה מול רשויות תשתית — שאלה לבדיקה משפטית ברמת הקבוצה, לא ברמת האתר.</span></span></li>
+        <li><span><span class="t">נוהל דיווח על אירוע אבטחה</span><span class="d">התיקון מחייב דיווח על אירוע חמור. צריך נוהל כתוב — מי מזהה, מי מחליט, מי מדווח, ותוך כמה זמן.</span></span></li>
+      </ul>
+      <div class="callout">
+        <span class="lbl">הבהרה</span>
+        <p>
+          אני בונה את כל המנגנונים הטכניים ומכין את כל הטיוטות המשפטיות, אבל אני לא עורך דין.
+          המסמכים חייבים אישור של היועץ המשפטי של הקבוצה לפני ההשקה. סנקציות תיקון 13 משמעותיות —
+          זה לא סעיף לדלג עליו.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 -->
+  <section id="s09">
+    <div class="rail"><span class="num">09</span><span class="tag">Access</span></div>
+    <div class="col">
+      <h2>נגישות</h2>
+      <p class="lead">
+        אתר של חברה ישראלית בסדר גודל כזה חייב להיות נגיש לפי תקנות שוויון זכויות לאנשים עם מוגבלות
+        ותקן ישראלי 5568, המבוסס על WCAG 2.0 ברמה AA. אי־עמידה חושפת לתביעה — וזו תביעה שקל מאוד להגיש.
+      </p>
+      <ul>
+        <li><strong>נגישות מובנית, לא תוסף.</strong> ניגודיות תקינה, ניווט מלא במקלדת, מבנה כותרות היררכי, טקסט חלופי לכל תמונה, תוויות לכל שדה, וסימון ברור של הפוקוס.</li>
+        <li><strong>תמיכה בקורא מסך</strong> עם סימון ARIA נכון בכל רכיב אינטראקטיבי.</li>
+        <li><strong>כיבוד "צמצום תנועה"</strong> — כל האנימציות והסצנה התלת־ממדית נעצרות אוטומטית. זו הסיבה שהאפקטים נבנים עם מצב חלופי מלכתחילה.</li>
+        <li><strong>הצהרת נגישות</strong> בעמוד ייעודי, כולל שם רכז הנגישות ודרכי פנייה — <span class="pill req">נדרש ממך</span></li>
+        <li><strong>בדיקה חיצונית</strong> על ידי בודק מוסמך לפני ההשקה, עם דוח שנשמר כראיה.</li>
+      </ul>
+      <div class="callout">
+        <span class="lbl">המלצה נגד</span>
+        <p>
+          תוספי נגישות מסוג "ווידג'ט" (סרגל צף בפינה) אינם מספקים עמידה בתקן ואינם חוסמים תביעות.
+          הם משלימים, לא תחליף. נבנה נגיש באמת.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section id="s10">
+    <div class="rail"><span class="num">10</span><span class="tag">Visibility</span></div>
+    <div class="col">
+      <h2>נראות ומדידה</h2>
+      <div class="cards">
+        <div class="card"><h4>SEO טכני</h4><p>מבנה כתובות נקי, מפת אתר, נתונים מובנים לגוגל (Organization, Project, JobPosting), תגיות שיתוף, וכותרות ייחודיות לכל עמוד.</p></div>
+        <div class="card"><h4>מילות מפתח</h4><p>עמודי היכולות הם המנוע האורגני: "סריקת לידאר", "קידוח אופקי מכוון", "מדידות קדסטר", "פריסת סיבים" — ביטויים שמחפשים בפועל.</p></div>
+        <div class="card"><h4>ביצועים</h4><p>יעד מדיד ב־Core Web Vitals. מהירות משפיעה גם על הדירוג וגם על שיעור הנטישה.</p></div>
+        <div class="card"><h4>מדידה</h4><p>Google Analytics 4 ו־Search Console — מותנים בהסכמת Cookies, כנדרש בסעיף 08.</p></div>
+      </div>
+      <p style="margin-top:18px">
+        <strong>הזדמנות:</strong> שמונה חברות עם נוכחות דיגיטלית מפוצלת מתחרות זו בזו בגוגל.
+        אתר קבוצה מרכזי שמקשר אליהן נכון מחזק את כולן — וזה שיקול נוסף למבנה שבסעיף 03.
+      </p>
+    </div>
+  </section>
+
+  <!-- 11 -->
+  <section id="s11">
+    <div class="rail"><span class="num">11</span><span class="tag">Plan</span></div>
+    <div class="col">
+      <h2>תוכנית עבודה</h2>
+      <p class="lead">שישה שלבים. אחרי כל שלב תראה תוצאה מוחשית ותוכל לעצור, לשנות כיוון או לאשר המשך.</p>
+      <ol class="flow">
+        <li><span class="s">שלב 1</span><span class="h">שלד ותשתית</span><span class="b">הקמת הפרויקט, מערכת עיצוב, תמיכת RTL, ניווט וכל העמודים עם תוכן זמני. תוצר: אתר חי לגלילה.</span></li>
+        <li><span class="s">שלב 2</span><span class="h">שפה עיצובית</span><span class="b">עמוד הבית, עמוד עוגן ועמוד חברה בעיצוב מלא. תוצר: אישור כיוון לפני שממשיכים.</span></li>
+        <li><span class="s">שלב 3</span><span class="h">סצנה תלת־ממדית</span><span class="b">בניית ההירו ומסלול הפרויקט, אופטימיזציה ומצב חלופי. תוצר: הרגעים הוויזואליים הסופיים.</span></li>
+        <li><span class="s">שלב 4</span><span class="h">תוכן אמיתי</span><span class="b">שמונה עמודי חברה, פרויקטים, תמונות ולוגואים. תוצר: אתר מלא.</span></li>
+        <li><span class="s">שלב 5</span><span class="h">ציות ואבטחה</span><span class="b">סעיפים 07–09 במלואם, טפסים, מסמכים משפטיים, בדיקות. תוצר: אתר מוכן לביקורת.</span></li>
+        <li><span class="s">שלב 6</span><span class="h">השקה</span><span class="b">חיבור דומיין, בדיקות אחרונות, עלייה לאוויר וניטור. תוצר: אתר חי.</span></li>
+      </ol>
+      <p>אפשר להתחיל בשלב 1 מיד — התוכן מהמצגת מספיק כדי לבנות שלד אמיתי ולא דמה.</p>
+    </div>
+  </section>
+
+  <!-- 12 -->
+  <section id="s12">
+    <div class="rail"><span class="num">12</span><span class="tag">Inputs</span></div>
+    <div class="col">
+      <h2>מה נדרש ממך</h2>
+      <p class="lead">המצגת סגרה את רוב פערי התוכן. זו הרשימה המעודכנת של מה שעדיין חסר.</p>
+      <ul class="checklist">
+        <li><span><span class="t">לוגו בקובץ וקטורי <span class="pill req">חוסם</span></span><span class="d">SVG/AI/EPS — של פורמולה תשתיות ושל שמונה החברות. חילוץ מהמצגת נותן איכות נמוכה.</span></span></li>
+        <li><span><span class="t">ערכי צבע מדויקים <span class="pill req">חוסם</span></span><span class="d">האדום והאפור־צפחה של המותג. כרגע אני דוגם מהמצגת וזה קירוב.</span></span></li>
+        <li><span><span class="t">צילומי מסך של אתרי החברות <span class="pill req">חוסם</span></span><span class="d">בעיקר שמרד — האתר שקיבל פידבק חיובי. כל הדומיינים חסומים בסביבה שלי.</span></span></li>
+        <li><span><span class="t">תרגום עברי מאושר</span><span class="d">המצגת באנגלית. צריך את שמות החברות ותיאורי היכולות בעברית, בניסוח שאתם עומדים מאחוריו.</span></span></li>
+        <li><span><span class="t">פרויקטים ותמונות</span><span class="d">6–12 פרויקטים עם תמונות באיכות גבוהה. במיוחד כאלה שבהם יותר מחברה אחת השתתפה — הם מוכיחים את הסינרגיה. סמן מה חסוי.</span></span></li>
+        <li><span><span class="t">מה מותר לפרסם</span><span class="d">אחוזי החזקה כן או לא, נתונים פיננסיים כן או לא, שמות לקוחות כן או לא. ראה האזהרה בסעיף 02.</span></span></li>
+        <li><span><span class="t">תקנים והסמכות</span><span class="d">ISO, סיווג קבלני, אישורים ביטחוניים — לכל חברה, כולל קבצי לוגו.</span></span></li>
+        <li><span><span class="t">פרטי קשר לכל חברה</span><span class="d">כתובת, טלפון, מייל — ולאן מנותבת פנייה בכל נושא.</span></span></li>
+        <li><span><span class="t">רכז נגישות וממונה פרטיות</span><span class="d">שמות ודרכי התקשרות — נדרש להצהרות באתר.</span></span></li>
+        <li><span><span class="t">דומיין</span><span class="d">שם הדומיין ומי מנהל אותו טכנית.</span></span></li>
+        <li><span><span class="t">איש קשר ב־IT של הקבוצה <span class="pill std">מומלץ</span></span><span class="d">לתאם דרישות אבטחה ואישור ספקים מראש ולא להיתקע בסוף.</span></span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 13 -->
+  <section id="s13">
+    <div class="rail"><span class="num">13</span><span class="tag">Open</span></div>
+    <div class="col">
+      <h2>שאלות פתוחות</h2>
+      <p class="lead">חמש החלטות. אין צורך לענות על כולן עכשיו — רק על הראשונה כדי שאתחיל.</p>
+      <div class="rows">
+        <div class="row"><div class="k">1 · מערכת ניהול תוכן<span class="sub">decision</span></div><div class="v">ההמלצה שלי היא כן, בגלל שמונה החברות. מאשר?</div></div>
+        <div class="row"><div class="k">2 · יחס לאתרי הבנות<span class="sub">strategy</span></div><div class="v">אתר הקבוצה מקשר החוצה לאתרים הקיימים, או שבהמשך מאחדים את כולם תחת מותג אחד? זו החלטה אסטרטגית שמשפיעה על כל מבנה הניווט.</div></div>
+        <div class="row"><div class="k">3 · חומרי צילום<span class="sub">assets</span></div><div class="v">יש צילומי רחפן, ענני נקודות או מודלים תלת־ממדיים מאופק שאפשר להשתמש בהם? זה ישנה את רמת האתר יותר מכל אפקט סינתטי.</div></div>
+        <div class="row"><div class="k">4 · דרושים<span class="sub">careers</span></div><div class="v">גיוס מרוכז לכל הקבוצה באתר, או הפניה לכל חברה בנפרד?</div></div>
+        <div class="row"><div class="k">5 · תאריך יעד<span class="sub">timeline</span></div><div class="v">יש אבן דרך — כנס, מכרז, סוף רבעון — שאליה צריך להספיק?</div></div>
+      </div>
+      <div class="callout">
+        <span class="lbl">הצעד הבא</span>
+        <p>
+          תאשר את המסמך ואתחיל בשלב 1: הקמת הפרויקט, מערכת העיצוב ותמיכת RTL מלאה, עם כל העמודים
+          ותוכן אמיתי מהמצגת. תוך זמן קצר תראה אתר חי שאפשר לגלול בו, ומשם נחדד יחד.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>אפיון אתר פורמולה תשתיות · גרסה 0.2 · מסמך עבודה</span>
+    <span class="m">31.08.2026</span>
+  </footer>
+</div>
