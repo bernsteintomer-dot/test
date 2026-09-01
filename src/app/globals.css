@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #a01915;
+  --color-brand-deep: #7d1310;
+  --color-brand-light: #e0685e;
+  --color-brand-soft: #f6e9e8;
+  --color-slate: #3b4a54;
+  --color-slate-deep: #26313a;
+  --color-ink: #12181c;
+  --color-ink-2: #55636d;
+  --color-ink-3: #8a959d;
+  --color-paper: #f4f3f1;
+  --color-paper-2: #ffffff;
+  --color-rule: #ddd9d6;
+  --color-rule-soft: #eae7e4;
+  --color-night: #0b0f12;
+  --color-night-2: #131a1f;
+  --color-night-rule: #232d34;
+
+  --font-display: var(--font-rubik), "Rubik", system-ui, sans-serif;
+  --font-body: var(--font-plex), "IBM Plex Sans Hebrew", system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  ::selection {
+    background: var(--color-brand);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+@layer utilities {
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    unicode-bidi: isolate;
+  }
+  .measure {
+    max-width: 65ch;
+  }
+  .rule-ticks {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      var(--color-rule) 0 4px,
+      transparent 4px 10px
+    );
+  }
+}
+
+/* scroll reveal — opt-out under reduced motion */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
