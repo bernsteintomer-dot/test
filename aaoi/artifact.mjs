@@ -8,7 +8,7 @@ const styles = [...head.matchAll(/<style>([\s\S]*?)<\/style>/g)].map((m) => m[1]
   .replace('body[data-theme="light"]{color-scheme:light}', "")
   .replace("body{margin:0;background:var(--anatomy-page);", ".iso{min-height:100%;background:var(--anatomy-page);");
 const bodyStart = src.indexOf(">", src.indexOf("<body")) + 1;
-const inner = src.slice(bodyStart, src.indexOf("</body>"));
+const inner = src.slice(bodyStart, src.lastIndexOf("</body>"));
 const page = `<title>AAOI Optical Module</title>
 <style>
 /* layout: one framed figure, centred, with its legend below */
