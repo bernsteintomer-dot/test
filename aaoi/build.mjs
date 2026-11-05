@@ -197,7 +197,7 @@ function amplifier() {
 }
 
 function moduleArt() {
-  const out = [halo(k.insetPlan(MOD, 2), MOD_Z, 0.1, 5)];
+  const out = [halo(k.insetPlan(MOD, 2), MOD_Z, 0.1, 5), `<g class="hot" data-hot="module">`];
   const WALL_W = 104;
   const FAR_WALL = { x: MOD.x, y: MOD.y, w: WALL_W, d: 2, r: 0.4 };
   const NEAR_WALL = { x: MOD.x, y: MOD.y + MOD.d - 2, w: WALL_W, d: 2, r: 0.4 };
@@ -206,8 +206,10 @@ function moduleArt() {
   out.push(S(k.slabOf({ x: MOD.x + 1, y: CY - 12.8, w: WALL_W - 2, d: 25.6, r: 0.5 }, SHELL_TOP, PCB_TOP - SHELL_TOP, P, 2), { tone: "lo", crease: "none" }));
   // DSP, driver, passives
   const dsp = { x: -14, y: CY - 8, w: 16, d: 14, r: 0.8 };
+  out.push(`<g class="hot" data-hot="dsp">`);
   out.push(S(k.slabOf(dsp, PCB_TOP, 2, P, 2, 0.4), { tone: "hi", crease: "lo" }));
   out.push(L(k.planOutline(k.insetPlan(dsp, 2), PCB_TOP + 2, P, 2), { tone: "faint" }));
+  out.push(`</g>`);
   out.push(S(k.slabOf({ x: 7, y: CY - 9, w: 7, d: 18, r: 0.5 }, PCB_TOP, 1.4, P, 2), { tone: "mid" }));
   const caps = [];
   for (const x of [-38, -33, -28]) for (const dy of [-9, -4, 3, 8]) caps.push([x, CY + dy]);
@@ -216,6 +218,7 @@ function moduleArt() {
   }
   out.push(D(k.dotGrid(-46, CY - 9, 2, 5, 4.4, PCB_TOP, P), { size: 0.4, tone: "lo" }));
   // laser submount, dies, beams, lens array
+  out.push(`<g class="hot" data-hot="lasers">`);
   out.push(S(k.slabOf({ x: DIE_X - 1.5, y: CY - 12.4, w: 6.5, d: 24.8, r: 0.4 }, PCB_TOP, 1.2, P, 1), { tone: "mid" }));
   for (let i = 0; i < 8; i++) {
     const plan = { x: DIE_X, y: DIE_Y(i), w: 3.6, d: 1.8, r: 0.25 };
@@ -231,6 +234,7 @@ function moduleArt() {
   }
   out.push(S(k.slabOf({ x: 27, y: CY - 12.4, w: 3.6, d: 24.8, r: 0.8 }, PCB_TOP, 2.8, P, 2, 0.4), { tone: "hi", crease: "lo" }));
   out.push(D(Array.from({ length: 8 }, (_, i) => at([28.8, DIE_Y(i) + 0.9, PCB_TOP + 2.8])), { size: 0.45, tone: "lo" }));
+  out.push(`</g>`);
   out.push(S(k.slabOf(NEAR_WALL, SHELL_TOP, 4, P, 2), { tone: "mid" }));
   out.push(D([-40, -10, 20].map((x) => at([x, NEAR_WALL.y + 1, SHELL_TOP + 4])), { size: 0.45 }));
   // MPO receptacle
@@ -242,6 +246,7 @@ function moduleArt() {
   out.push(S(k.slabOf({ x: 68, y: MOD.y + 0.4, w: 8, d: 2.4, r: 0.6 }, 8, 2.4, P, 2), { tone: "mid", crease: "none" }));
   out.push(S(k.slabOf({ x: 68, y: MOD.y + MOD.d - 2.8, w: 8, d: 2.4, r: 0.6 }, 8, 2.4, P, 2), { tone: "mid", crease: "none" }));
   out.push(S(k.slabOf({ x: 75, y: MOD.y + 0.4, w: 3, d: MOD.d - 0.8, r: 1.2 }, 8, 2.4, P, 2), { tone: "mid" }));
+  out.push(`</g>`);
   return out.join("");
 }
 
@@ -263,16 +268,33 @@ const svg = k.figureSvg({
     "A test bench. On the left, a switch with three transceiver cages; an optical module with its lid off is plugged into the middle cage. Inside it, eight laser chips sit in a row behind a lens array, and fibres run to the connector at the front. Behind it, a lane tester has a four-position knob and a dial that reads the data rate of one lane. The module's lid lies on the bench, and a cable-TV amplifier with cooling fins sits at the front left.",
   body: [
     plate(),
-    chassis(),
-    cages(),
-    amplifier(),
-    instrument(),
+    `<g class="hot" data-hot="switch">${chassis()}${cages()}</g>`,
+    `<g class="hot" data-hot="catv">${amplifier()}</g>`,
+    `<g class="hot" data-hot="tester">${instrument()}`,
     `<path data-part="pointer" class="iso-line" data-tone="hi" data-free="end" d="${pointerAt(KNOB_ANGLES[START])}" style="stroke-width:1.1"/>`,
-    `<path data-part="needle" class="iso-line" data-tone="hi" data-free="both" d="${needleAt(GENS[START].rate / FULL_SCALE)}" style="stroke-width:1.1"/>`,
+    `<path data-part="needle" class="iso-line" data-tone="hi" data-free="both" d="${needleAt(GENS[START].rate / FULL_SCALE)}" style="stroke-width:1.1"/></g>`,
     moduleArt(),
     lid(),
   ],
 });
+
+const GEN_NOTES = [
+  "דור ישן, אבל עדיין חלק גדול מההכנסות. לרבעון השלישי החברה צופה ירידה של 20–25 מיליון $ בגלל מחסור בסוויצ'ים אצל לקוח.",
+  "המנוע של היום: לפי שיחת המשקיעים ההכנסות ממנו עלו יותר מפי 4 בשנה.",
+  "ברבעון השני ההכנסות ממנו יותר מהוכפלו לעומת הרבעון הקודם, והחברה צופה כמעט פי 5 ברבעון השלישי.",
+  "עדיין בלי הכנסות: המוצר הראשון בהסמכה אצל לקוח. כאן נמצא עיקר ההימור על המניה.",
+];
+const PARTS = [
+  { id: "lasers", name: "לייזרים", title: "שבבי לייזר: היתרון של AAOI", text: "AAOI מייצרת את שבבי הלייזר בעצמה ולא קונה אותם מספקים. לייזרים הם אחד מצווארי הבקבוק בתעשייה, במיוחד ב-1.6T, ולכן מי שמייצר בעצמו יכול לספק בזמן שמתחרים מחכים לרכיבים. במודול {gen} דולקים עכשיו {n} לייזרים.", src: "מקור: שיחת המשקיעים, רבעון 2 2026" },
+  { id: "dsp", name: "שבב DSP", title: "שבב DSP: נקנה מספק חיצוני", text: "המעבד שמתרגם בין אותות חשמליים לאור ומתקן שגיאות. AAOI לא מייצרת אותו אלא קונה אותו מיצרני שבבים, וגם הוא צוואר בקבוק. זה רכיב יקר שהחברה לא שולטת במחירו, ולדעתי זו אחת הסיבות שהרווח הגולמי תקוע סביב 28%–30%.", src: "רווח גולמי: דוח רבעון 2 2026 (27.7% GAAP, ‏29.8% non-GAAP)" },
+  { id: "module", name: "המודול", title: "המודול: המוצר שהחברה מוכרת", text: "טרנסיבר אופטי שנכנס לפתח בסוויץ' והופך חשמל לאור ובחזרה. מרכזי נתונים הכניסו 107.7 מיליון $ ברבעון השני של 2026, שהם 56% מההכנסות, צמיחה של 140% לעומת השנה הקודמת.", src: "מקור: דוח רבעון 2 2026" },
+  { id: "switch", name: "הסוויץ'", title: "הסוויץ': איפה נמצא הלקוח", text: "כל סוויץ' במרכז נתונים של AI מחזיק עשרות מודולים כאלה. הדוח לא מפרסם שמות של לקוחות, אבל הריכוזיות קיצונית: לפי שיחת המשקיעים עשרת הלקוחות הגדולים הם 99% מההכנסות, ושני לקוחות מרכזי נתונים הם 26% ו-24%. אם אחד מהם עוצר הזמנות, המספרים נופלים.", src: "מקור: שיחת המשקיעים, רבעון 2 2026 (לא אומת מול התמליל המלא)" },
+  { id: "catv", name: "מגבר CATV", title: "מגבר CATV: העסק השני", text: "מגברי 1.8GHz לחברות כבלים שמשדרגות את הרשתות ל-DOCSIS 4.0. ברבעון השני זה היה 80.6 מיליון $, שהם 42% מההכנסות, צמיחה של 44% לעומת השנה הקודמת. לרבעון השלישי החברה צופה 100–110 מיליון $ מהתחום הזה.", src: "מקור: דוח רבעון 2 2026 ותחזית רבעון 3" },
+  { id: "tester", name: "כושר ייצור", title: "כושר ייצור: צוואר הבקבוק האמיתי", text: "השעון מראה כמה מידע עובר בכל ערוץ: {rate}G ב-{gen}. בצד העסקי השאלה היא כמה החברה מסוגלת לייצר. היום יש לה כושר של קרוב ל-200 אלף יחידות בחודש, והיעד הוא כ-650 אלף מודולי 800G ו-1.6T בחודש עד סוף 2026, עם מפעלים חדשים באזור יוסטון. ההנהלה אומרת שהביקוש יעלה על כושר הייצור עד אמצע 2027.", src: "מקור: דוח רבעון 2 2026 ושיחת המשקיעים" },
+];
+const START_PART = "lasers";
+const noteHtml = (g, note) => `<bdi dir="ltr">${g.lanes} × ${g.rate}G = ${g.name}</bdi> · ${note}`;
+const fill = (text, g) => text.replaceAll("{gen}", g.name).replaceAll("{n}", String(g.lanes)).replaceAll("{rate}", String(g.rate));
 
 const readoutOf = (g) => `${g.name} · ${g.lanes} lasers × ${g.rate}G`;
 
@@ -294,6 +316,25 @@ const lanes = [...svg.querySelectorAll(".lane")];
 const fibres = [...svg.querySelectorAll(".fibre")];
 const readout = document.querySelector("[data-readout]");
 const still = matchMedia("(prefers-reduced-motion: reduce)");
+const GEN_NOTES = ${JSON.stringify(GEN_NOTES)};
+const PARTS = ${JSON.stringify(PARTS)};
+const fill = ${fill.toString()};
+const noteHtml = ${noteHtml.toString()};
+const genButtons = [...document.querySelectorAll("[data-gen]")];
+const partButtons = [...document.querySelectorAll("[data-pick]")];
+const hots = [...svg.querySelectorAll("[data-hot]")];
+const genNote = document.getElementById("gen-note");
+const info = document.getElementById("info");
+let part = "${START_PART}";
+function pick(id) {
+  part = id;
+  const p = PARTS.find((x) => x.id === id);
+  hots.forEach((el) => el.toggleAttribute("data-sel", el.dataset.hot === id));
+  partButtons.forEach((el) => el.setAttribute("aria-pressed", String(el.dataset.pick === id)));
+  info.querySelector("h3").textContent = p.title;
+  info.querySelector(".info-text").textContent = fill(p.text, GENS[gen]);
+  info.querySelector(".src").textContent = p.src;
+}
 let gen = ${START}, turn = GENS[gen].rate / FULL_SCALE, angle = KNOB_ANGLES[gen];
 let frame = 0, last = 0, clock = 0, touring = !still.matches, visible = false, idleTimer = 0;
 function select(next) {
@@ -302,6 +343,9 @@ function select(next) {
   lanes.forEach((el, i) => el.toggleAttribute("data-on", i < g.lanes));
   fibres.forEach((el, i) => el.setAttribute("data-tone", i < g.lanes ? "hi" : "faint"));
   if (display) display.textContent = g.name;
+  genButtons.forEach((el) => el.setAttribute("aria-pressed", String(Number(el.dataset.gen) === gen)));
+  genNote.innerHTML = noteHtml(g, GEN_NOTES[gen]);
+  pick(part);
   const text = readoutOf(g);
   readout.textContent = text;
   stage.setAttribute("aria-valuenow", String(gen));
@@ -326,16 +370,17 @@ function tick(now) {
 function run() { if (!frame && visible) { last = 0; frame = requestAnimationFrame(tick); } }
 function steer(next) {
   touring = false;
-  clearTimeout(idleTimer);
-  idleTimer = setTimeout(() => { touring = !still.matches; clock = 0; run(); }, 4200);
   if (next !== gen) select(next); else run();
 }
 new IntersectionObserver((entries) => { visible = entries[entries.length - 1].isIntersecting; if (visible) run(); }, { rootMargin: "120px 0px" }).observe(stage);
-stage.addEventListener("pointermove", (event) => {
-  const box = svg.getBoundingClientRect();
-  const share = Math.min(0.999, Math.max(0, (event.clientX - box.left) / box.width));
-  steer(Math.floor(share * GENS.length));
+svg.addEventListener("click", (event) => {
+  const hot = event.target.closest("[data-hot]");
+  if (!hot) return;
+  touring = false;
+  pick(hot.dataset.hot);
 });
+genButtons.forEach((el) => el.addEventListener("click", () => steer(Number(el.dataset.gen))));
+partButtons.forEach((el) => el.addEventListener("click", () => { touring = false; pick(el.dataset.pick); }));
 stage.addEventListener("keydown", (event) => {
   let to = null;
   if (event.key === "ArrowRight" || event.key === "ArrowUp") to = Math.min(GENS.length - 1, gen + 1);
@@ -357,20 +402,33 @@ const EXTRA_CSS = `<style>
 .fibre{transition:stroke .45s var(--anatomy-ease)}
 @media (prefers-reduced-motion: reduce){.lane .lane-on,.lane .lane-off,.fibre{transition:none}}
 .iso-legend [lang="he"]{direction:rtl;text-align:right;display:block}
+.hot{cursor:pointer}
+.hot[data-sel] .iso-edge{stroke:var(--anatomy-lit)}
+.hot[data-sel] .iso-top{fill:var(--anatomy-lit-top)}
+.panel{display:grid;gap:18px;margin-top:20px;direction:rtl;text-align:right}
+.panel-group{display:grid;gap:8px}
+.panel-label{font:11px/1.4 var(--anatomy-mono);letter-spacing:.08em;color:var(--anatomy-muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:13px/1 var(--anatomy-mono);padding:9px 14px;border-radius:999px;border:1px solid var(--anatomy-lo);background:var(--anatomy-card);color:var(--anatomy-text);cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.chip:hover{border-color:var(--anatomy-mid);color:var(--anatomy-strong)}
+.chip[aria-pressed="true"]{background:var(--anatomy-strong);border-color:var(--anatomy-strong);color:var(--anatomy-card)}
+.chip:focus-visible{outline:2px solid var(--anatomy-strong);outline-offset:2px}
+.chip-he{font-family:inherit}
+.gen-note{margin:0;color:var(--anatomy-text);line-height:1.7;max-width:65ch}
+.info{background:var(--anatomy-card);box-shadow:var(--anatomy-lift);border-radius:10px;padding:16px 18px;display:grid;gap:6px;min-width:0}
+.info h3{margin:0;font-size:16px;line-height:1.4;color:var(--anatomy-strong);text-wrap:balance}
+.info-text{margin:0;line-height:1.75;color:var(--anatomy-text);max-width:65ch}
+.info .src{margin:0;font-size:12px;color:var(--anatomy-muted)}
+.summary{margin:0;line-height:1.75;color:var(--anatomy-text);font-size:13px;max-width:70ch}
 </style>`;
 
 const g0 = GENS[START];
 const body = k.plateHtml({
   fig: "Fig 1",
   title: "AAOI · optical module",
-  hint: "Hover to change generation",
+  hint: "Tap a part · pick a generation",
   readout: readoutOf(g0),
-  keys: [
-    { mark: "lit", label: "@@K1@@" },
-    { mark: "raised", label: "@@K2@@" },
-  ],
-  caption: "@@CAP@@",
-  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Transceiver generation: arrow keys step from 100G to 1.6T" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${START}">${svg}</div>`,
+  body: `<div class="iso-stage" tabindex="0" role="slider" aria-label="Transceiver generation: arrow keys step from 100G to 1.6T; tap a part of the bench to read about it" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${START}">${svg}</div>`,
 });
 
 const he = (s) => `<span lang="he" dir="rtl">${s}</span>`;
@@ -381,11 +439,16 @@ const CAP =
   "העסק השני הוא מגברי CATV לרשתות כבלים: 80.6 מיליון $ (42%). ההכנסות כולן קפצו ב-86% לעומת השנה הקודמת, אבל ההפסד הנקי לפי GAAP היה 22.8 מיליון $ והרווח הגולמי 27.7% בלבד. " +
   "התחזית לרבעון השלישי היא 255–290 מיליון $. הסיפור כולו תלוי במעבר ל-800G ול-1.6T ובמספר לקוחות קטן מאוד: עשרת הגדולים הם 99% מההכנסות.";
 
-let html = k.pageHtml({ title: "AAOI optical module", theme, body, script: kitScript() + live, width: 700 });
+const p0 = PARTS.find((x) => x.id === START_PART);
+const panel = `<section class="panel" lang="he" dir="rtl">
+<div class="panel-group"><span class="panel-label">דור מודול</span><div class="chips">${GENS.map((g, i) => `<button type="button" class="chip" data-gen="${i}" aria-pressed="${i === START}">${g.name}</button>`).join("")}</div><p class="gen-note" id="gen-note">${noteHtml(g0, GEN_NOTES[START])}</p></div>
+<div class="panel-group"><span class="panel-label">לחץ על חלק באיור או כאן</span><div class="chips">${PARTS.map((x) => `<button type="button" class="chip chip-he" data-pick="${x.id}" aria-pressed="${x.id === START_PART}">${x.name}</button>`).join("")}</div></div>
+<article class="info" id="info" aria-live="polite"><h3>${p0.title}</h3><p class="info-text">${fill(p0.text, g0)}</p><p class="src">${p0.src}</p></article>
+<p class="summary">@@CAP@@</p>
+</section>`;
+let html = k.pageHtml({ title: "AAOI optical module", theme, body: body + panel, script: kitScript() + live, width: 700 });
 html = html
-  .replace("@@K1@@", he(K1))
-  .replace("@@K2@@", he(K2))
-  .replace("@@CAP@@", he(CAP))
+  .replace("@@CAP@@", CAP)
   .replace("</head>", `${EXTRA_CSS}</head>`);
 const file = theme === "light" ? "aaoi-light.html" : "aaoi.html";
 writeFileSync(join(HERE, file), html);
